@@ -42,7 +42,7 @@ module.exports. isAuthor= async(req,res,next)=>{
     next();
 }
 
-module.exports. validatereview=(req,res,next)=>{
+module.exports.validatereview=(req,res,next)=>{
     
     const {error}=reviewsschema.validate(req.body);
     if(error){

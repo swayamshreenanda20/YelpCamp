@@ -1,10 +1,6 @@
-
-
 if(process.env.NODE_ENV !== "production"){
   require('dotenv').config();
 }
-
-
 
 
 const express=require('express');
@@ -27,6 +23,10 @@ const reviewsroutes = require('./routes/review');
 const usersroutes = require('./routes/user');
 const passport=require('passport');
 const localstrategy= require('passport-local');
+const mongoSanitize= require('express-mongo-sanitize');
+const helmet =require('helmet');
+
+//const MongoDbStore =require("connect-mongo")(session);
 
 
 main().catch(err => console.log(err));
@@ -44,15 +44,19 @@ async function main() {
  console.log(e)
 })
 }
+
 app.engine('ejs',ejsmate)
 app.set('view engine','ejs');
 app.set('views',path.join(__dirname,'views'))
 
 app.use(methodoverride('_method'));
 app.use(express.static(path.join(__dirname,'public')));
+app.use(mongoSanitize()); 
+
 
 
 const sessionconfig={
+  name:'session',
   secret:'thisshouldbebettersecret',
   resave: false,
   saveUninitialized:true,
@@ -63,8 +67,9 @@ const sessionconfig={
   }
 }
 
-app.use(session(sessionconfig)) //this should be written before passport.session()
+app.use(session(sessionconfig)); //this should be written before passport.session()
 app.use(flash());
+app.use(helmet({contentSecurityPolicy:false}));
 
 app.use(passport.initialize());
 app.use(passport.session()); 

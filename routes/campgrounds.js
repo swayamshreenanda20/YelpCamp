@@ -18,20 +18,20 @@ router.use(methodoverride("_method"));
 router.get('/',catchasync(campgrounds.index));
 
 
-//router.post('/',isloggedin,validatecampground,catchasync(campgrounds.createcampground))
-router.post(upload.array('image'),(req,res)=>{
-    console.log(req.body, req.files);
-    res.send("it worked");
-})
+router.post('/',isloggedin,upload.array('image'),validatecampground,catchasync(campgrounds.createcampground))
+//router.post('/',upload.array('image'),(req,res)=>{
+    //console.log(req.body, req.files);
+    //res.send("it worked");
+//})
 
 router.get('/new',isloggedin,campgrounds.rendernewform)
 
 
-router.get('/:id', isloggedin,catchasync(campgrounds.showcampground))
+router.get('/:id',catchasync(campgrounds.showcampground))
 
 router.get('/:id/edit',isloggedin,isAuthor,catchasync(campgrounds.rendereditform))
 
-router.put('/:id',isloggedin,isAuthor,validatecampground,catchasync(campgrounds.updatecampground))
+router.put('/:id',isloggedin,isAuthor,upload.array('image'),validatecampground,catchasync(campgrounds.updatecampground))
 
 router.delete('/:id',isAuthor, catchasync(campgrounds.deletecampground))
 
